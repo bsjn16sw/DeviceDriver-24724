@@ -32,3 +32,14 @@ TEST(TestCaseName, Flash에서Read가5번중다르게리턴하는게있으면EXCEPTION) {
 		dd.read(0xA);
 		}, ReadFailException);
 }
+
+TEST(TestCaseName, Write전에비어있는지Read해야함) {
+	MockFlashMemoryDevice mk;
+
+	EXPECT_CALL(mk, read)
+		.Times(1);
+		//.WillRepeatedly(testing::Return(0xFF));
+
+	DeviceDriver dd{ &mk };
+	dd.write(0xA, 'A');
+}

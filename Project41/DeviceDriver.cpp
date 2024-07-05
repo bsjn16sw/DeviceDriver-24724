@@ -34,6 +34,21 @@ int DeviceDriver::read(long address)
 
 void DeviceDriver::write(long address, int data)
 {
-    // TODO: implement this method
-    m_hardware->write(address, (unsigned char)data);
+    if (isEmptyAddress(address)) {
+        m_hardware->write(address, (unsigned char)data);
+    }
+}
+
+bool DeviceDriver::isEmptyAddress(long address)
+{
+    unsigned char data;
+    try {
+        data = m_hardware->read(address);
+    }
+    catch (ReadFailException& e) {
+        return false;
+    }
+
+    if (data == 0xFF)    return true;
+    return false;
 }
