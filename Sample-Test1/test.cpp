@@ -18,3 +18,17 @@ TEST(TestCaseName, Flash에서Read가5번호출되어야PASS) {
 	DeviceDriver dd{ &mk };
 	dd.read(0xA);
 }
+
+TEST(TestCaseName, Flash에서Read가5번중다르게리턴하는게있으면EXCEPTION) {
+	MockFlashMemoryDevice mk;
+
+	EXPECT_CALL(mk, read, (0xA), ())
+		.WillOnce(testing::Return(1))
+		.WillRepeatedly(testing::Return(2));
+
+	DeviceDriver dd{ &mk };
+
+	EXPECT_THROW({
+		dd.read(0xA);
+		}, ReadFailException);
+}
